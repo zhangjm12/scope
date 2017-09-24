@@ -110,7 +110,13 @@ func mapRead(decoder *codec.Decoder, decodeValue func(isNil bool) interface{}) p
 		var key string
 		z.DecSendContainerState(containerMapKey)
 		if !r.TryDecodeAsNil() {
-			key = r.DecodeString()
+			b := r.DecodeStringAsBytes()
+			// Try to avoid an allocation by looking the key up
+			var ok bool
+			key, ok = commonKeys[string(b)]
+			if !ok {
+				key = string(b)
+			}
 		}
 
 		z.DecSendContainerState(containerMapValue)
