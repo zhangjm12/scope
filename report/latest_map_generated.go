@@ -45,6 +45,12 @@ func (m StringLatestMap) Size() int {
 // Merge produces a fresh StringLatestMap containing the keys from both inputs.
 // When both inputs contain the same key, the newer value is used.
 func (m StringLatestMap) Merge(n StringLatestMap) StringLatestMap {
+	switch {
+	case m.entries == nil:
+		return n
+	case n.entries == nil:
+		return m
+	}
 	out := make([]stringLatestEntry, 0, len(m.entries)+len(n.entries))
 
 	i, j := 0, 0
@@ -244,6 +250,12 @@ func (m NodeControlDataLatestMap) Size() int {
 // Merge produces a fresh NodeControlDataLatestMap containing the keys from both inputs.
 // When both inputs contain the same key, the newer value is used.
 func (m NodeControlDataLatestMap) Merge(n NodeControlDataLatestMap) NodeControlDataLatestMap {
+	switch {
+	case m.entries == nil:
+		return n
+	case n.entries == nil:
+		return m
+	}
 	out := make([]nodeControlDataLatestEntry, 0, len(m.entries)+len(n.entries))
 
 	i, j := 0, 0

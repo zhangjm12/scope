@@ -78,6 +78,12 @@ function generate_latest_map() {
     // Merge produces a fresh ${latest_map_type} containing the keys from both inputs.
     // When both inputs contain the same key, the newer value is used.
     func (m ${latest_map_type}) Merge(n ${latest_map_type}) ${latest_map_type} {
+        switch {
+        case m.entries == nil:
+            return n
+        case n.entries == nil:
+            return m
+        }
         out := make([]${entry_type}, 0, len(m.entries)+len(n.entries))
 
         i, j := 0, 0
