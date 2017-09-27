@@ -171,7 +171,7 @@ function generate_latest_map() {
             return false
         }
         for i := range m.entries {
-            if !m.entries[i].Equal(&n.entries[i]) {
+            if m.entries[i].key != n.entries[i].key || !m.entries[i].Equal(&n.entries[i]) {
                 return false
             }
         }
@@ -225,6 +225,7 @@ function generate_latest_map() {
                 key = r.DecodeString()
             }
             i := m.locate(key)
+            m.entries[i].key = key
             z.DecSendContainerState(containerMapValue)
             if !r.TryDecodeAsNil() {
                 m.entries[i].CodecDecodeSelf(decoder)

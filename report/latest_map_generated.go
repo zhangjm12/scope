@@ -138,7 +138,7 @@ func (m StringLatestMap) DeepEqual(n StringLatestMap) bool {
 		return false
 	}
 	for i := range m.entries {
-		if !m.entries[i].Equal(&n.entries[i]) {
+		if m.entries[i].key != n.entries[i].key || !m.entries[i].Equal(&n.entries[i]) {
 			return false
 		}
 	}
@@ -192,6 +192,7 @@ func (m *StringLatestMap) CodecDecodeSelf(decoder *codec.Decoder) {
 			key = r.DecodeString()
 		}
 		i := m.locate(key)
+		m.entries[i].key = key
 		z.DecSendContainerState(containerMapValue)
 		if !r.TryDecodeAsNil() {
 			m.entries[i].CodecDecodeSelf(decoder)
@@ -336,7 +337,7 @@ func (m NodeControlDataLatestMap) DeepEqual(n NodeControlDataLatestMap) bool {
 		return false
 	}
 	for i := range m.entries {
-		if !m.entries[i].Equal(&n.entries[i]) {
+		if m.entries[i].key != n.entries[i].key || !m.entries[i].Equal(&n.entries[i]) {
 			return false
 		}
 	}
@@ -390,6 +391,7 @@ func (m *NodeControlDataLatestMap) CodecDecodeSelf(decoder *codec.Decoder) {
 			key = r.DecodeString()
 		}
 		i := m.locate(key)
+		m.entries[i].key = key
 		z.DecSendContainerState(containerMapValue)
 		if !r.TryDecodeAsNil() {
 			m.entries[i].CodecDecodeSelf(decoder)
