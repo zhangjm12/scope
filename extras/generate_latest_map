@@ -36,7 +36,6 @@ function generate_latest_map() {
     local lowercase_data_type="${data_type,}"
     local entry_type="${lowercase_data_type}LatestEntry"
     local latest_map_type="${uppercase_data_type}LatestMap"
-    local empty_latest_map_variable="empty${latest_map_type}"
     local make_function="Make${latest_map_type}"
 
     # shellcheck disable=SC2016
