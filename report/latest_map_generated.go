@@ -115,9 +115,22 @@ func (m *StringLatestMap) locate(key string) int {
 
 // Set the value for the given key.
 func (m StringLatestMap) Set(key string, timestamp time.Time, value string) StringLatestMap {
-	i := m.locate(key)
+	i := sort.Search(len(m.entries), func(i int) bool {
+		return m.entries[i].key >= key
+	})
+	// i is now the position where key should go, either at the end or in the middle
+	oldEntries := m.entries
+	if i == len(m.entries) {
+		m.entries = append(m.entries, stringLatestEntry{})
+	} else if m.entries[i].key == key {
+		m.entries = make([]stringLatestEntry, len(oldEntries))
+		copy(m.entries, oldEntries)
+	} else {
+		m.entries = make([]stringLatestEntry, len(oldEntries)+1)
+		copy(m.entries, oldEntries[:i])
+		copy(m.entries[i+1:], oldEntries[i:])
+	}
 	m.entries[i] = stringLatestEntry{key: key, Timestamp: timestamp, Value: value}
-	// CAUTION: NOT REALLY COPYING
 	return m
 }
 
@@ -320,9 +333,22 @@ func (m *NodeControlDataLatestMap) locate(key string) int {
 
 // Set the value for the given key.
 func (m NodeControlDataLatestMap) Set(key string, timestamp time.Time, value NodeControlData) NodeControlDataLatestMap {
-	i := m.locate(key)
+	i := sort.Search(len(m.entries), func(i int) bool {
+		return m.entries[i].key >= key
+	})
+	// i is now the position where key should go, either at the end or in the middle
+	oldEntries := m.entries
+	if i == len(m.entries) {
+		m.entries = append(m.entries, nodeControlDataLatestEntry{})
+	} else if m.entries[i].key == key {
+		m.entries = make([]nodeControlDataLatestEntry, len(oldEntries))
+		copy(m.entries, oldEntries)
+	} else {
+		m.entries = make([]nodeControlDataLatestEntry, len(oldEntries)+1)
+		copy(m.entries, oldEntries[:i])
+		copy(m.entries[i+1:], oldEntries[i:])
+	}
 	m.entries[i] = nodeControlDataLatestEntry{key: key, Timestamp: timestamp, Value: value}
-	// CAUTION: NOT REALLY COPYING
 	return m
 }
 

@@ -147,9 +147,22 @@ function generate_latest_map() {
 
     // Set the value for the given key.
     func (m ${latest_map_type}) Set(key string, timestamp time.Time, value ${data_type}) ${latest_map_type} {
-        i := m.locate(key)
+        i := sort.Search(len(m.entries), func(i int) bool {
+            return m.entries[i].key >= key
+        })
+        // i is now the position where key should go, either at the end or in the middle
+        oldEntries := m.entries
+        if i == len(m.entries) {
+            m.entries = append(m.entries, ${entry_type}{})
+        } else if m.entries[i].key == key {
+            m.entries = make([]${entry_type}, len(oldEntries))
+            copy(m.entries, oldEntries)
+        } else {
+            m.entries = make([]${entry_type}, len(oldEntries)+1)
+            copy(m.entries, oldEntries[:i])
+            copy(m.entries[i+1:], oldEntries[i:])
+        }
         m.entries[i] = ${entry_type}{key: key, Timestamp: timestamp, Value: value}
-        // CAUTION: NOT REALLY COPYING
         return m
     }
 
