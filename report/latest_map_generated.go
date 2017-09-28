@@ -121,7 +121,8 @@ func (m StringLatestMap) Set(key string, timestamp time.Time, value string) Stri
 	// i is now the position where key should go, either at the end or in the middle
 	oldEntries := m.entries
 	if i == len(m.entries) {
-		m.entries = append(m.entries, stringLatestEntry{})
+		m.entries = make([]stringLatestEntry, len(oldEntries)+1)
+		copy(m.entries, oldEntries)
 	} else if m.entries[i].key == key {
 		m.entries = make([]stringLatestEntry, len(oldEntries))
 		copy(m.entries, oldEntries)
@@ -339,7 +340,8 @@ func (m NodeControlDataLatestMap) Set(key string, timestamp time.Time, value Nod
 	// i is now the position where key should go, either at the end or in the middle
 	oldEntries := m.entries
 	if i == len(m.entries) {
-		m.entries = append(m.entries, nodeControlDataLatestEntry{})
+		m.entries = make([]nodeControlDataLatestEntry, len(oldEntries)+1)
+		copy(m.entries, oldEntries)
 	} else if m.entries[i].key == key {
 		m.entries = make([]nodeControlDataLatestEntry, len(oldEntries))
 		copy(m.entries, oldEntries)

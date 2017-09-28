@@ -153,7 +153,8 @@ function generate_latest_map() {
         // i is now the position where key should go, either at the end or in the middle
         oldEntries := m.entries
         if i == len(m.entries) {
-            m.entries = append(m.entries, ${entry_type}{})
+            m.entries = make([]${entry_type}, len(oldEntries)+1)
+            copy(m.entries, oldEntries)
         } else if m.entries[i].key == key {
             m.entries = make([]${entry_type}, len(oldEntries))
             copy(m.entries, oldEntries)
